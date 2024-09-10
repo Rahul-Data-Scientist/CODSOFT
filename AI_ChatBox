@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_INPUT 256
+
+// Function prototypes
+void to_lowercase(char *str);
+void respond_to_input(const char *input);
+
+int main() {
+    char input[MAX_INPUT];
+
+    printf("Welcome to the rule-based chat box! Type 'exit' to quit and hello to start.\n");
+
+    while (1) {
+        printf("You: ");
+        fgets(input, MAX_INPUT, stdin);
+        input[strcspn(input, "\n")] = '\0';  // Remove newline character
+
+        // Check for exit command
+        if (strcmp(input, "exit") == 0) {
+            printf("Chat box closed.\n");
+            break;
+        }
+
+        respond_to_input(input);
+    }
+
+    return 0;
+}
+
+void to_lowercase(char *str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+void respond_to_input(const char *input) {
+    char lower_input[MAX_INPUT];
+    strcpy(lower_input, input);
+    to_lowercase(lower_input);
+
+    if (strstr(lower_input, "hello") != NULL) {
+        printf("Chat Bot: Hi there! How can I help you today?\n");
+    } else if (strstr(lower_input, "how are you") != NULL) {
+        printf("Chat Bot: I'm just a chatbox, but I'm doing great! How about you?\n");
+    } else if (strstr(lower_input, "bye") != NULL) {
+        printf("Chat Bot: Goodbye! Have a nice day!\n");
+    } else if (strstr(lower_input, "who made you?") !=NULL){
+        printf("Chat Bot: I was made bye a human named Sagar Mehta.\n");
+    }else {
+        printf("Chat Bot: Sorry, I don't understand that.\n");
+    }
+}
