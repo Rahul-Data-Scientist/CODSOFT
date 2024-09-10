@@ -1,0 +1,92 @@
+#include <stdio.h>
+
+#define SIZE 3
+
+void initializeBoard(char board[SIZE][SIZE]);
+void printBoard(char board[SIZE][SIZE]);
+int isMoveValid(char board[SIZE][SIZE], int row, int col);
+int checkWin(char board[SIZE][SIZE], char player);
+int isBoardFull(char board[SIZE][SIZE]);
+
+int main() {
+    char board[SIZE][SIZE];
+    char currentPlayer = 'X';
+    int row, col;
+    int gameStatus = 0; // 0 = ongoing, 1 = win, 2 = draw
+
+    initializeBoard(board);
+
+    while (gameStatus == 0) {
+        printBoard(board);
+        printf("Player %c, enter row and column (0-2): ", currentPlayer);
+        scanf("%d %d", &row, &col);
+
+        if (isMoveValid(board, row, col)) {
+            board[row][col] = currentPlayer;
+            if (checkWin(board, currentPlayer)) {
+                gameStatus = 1;
+                printBoard(board);
+                printf("Player %c wins!\n", currentPlayer);
+            } else if (isBoardFull(board)) {
+                gameStatus = 2;
+                printBoard(board);
+                printf("The game is a draw.\n");
+            } else {
+                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+            }
+        } else {
+            printf("Invalid move. Try again.\n");
+        }
+    }
+
+    return 0;
+}
+
+void initializeBoard(char board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            board[i][j] = ' ';
+        }
+    }
+}
+
+void printBoard(char board[SIZE][SIZE]) {
+    printf(" %c | %c | %c\n", board[0][0], board[0][1], board[0][2]);
+    printf("---|---|---\n");
+    printf(" %c | %c | %c\n", board[1][0], board[1][1], board[1][2]);
+    printf("---|---|---\n");
+    printf(" %c | %c | %c\n", board[2][0], board[2][1], board[2][2]);
+}
+
+int isMoveValid(char board[SIZE][SIZE], int row, int col) {
+    return (row >= 0 && row < SIZE && col >= 0 && col < SIZE && board[row][col] == ' ');
+}
+
+int checkWin(char board[SIZE][SIZE], char player) {
+    // Check rows and columns
+    for (int i = 0; i < SIZE; i++) {
+        if ((board[i][0] == player && board[i][1] == player && board[i][2] == player) ||
+            (board[0][i] == player && board[1][i] == player && board[2][i] == player)) {
+            return 1;
+        }
+    }
+
+    // Check diagonals
+    if ((board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+        (board[0][2] == player && board[1][1] == player && board[2][0] == player)) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int isBoardFull(char board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (board[i][j] == ' ') {
+                return 0; // Board is not full
+            }
+        }
+    }
+    return 1; // Board is full
+}
